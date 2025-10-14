@@ -12,7 +12,7 @@ const genAI = new GoogleGenAI({
 
 async function generateGeminiResponse(prompt, history) {
   const chatHistory = history.map((msg) => ({
-    role: msg.role === "user" ? "user" : "assistant",
+    role: msg.role === "user" ? "user" : "model",
     parts: [{ text: msg.content }],
   }));
 

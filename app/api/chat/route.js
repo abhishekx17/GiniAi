@@ -64,7 +64,6 @@ export async function POST(req) {
     if (!prompt)
       return NextResponse.json({ error: "Empty message" }, { status: 400 });
 
-    // Create session for this user
     const sessionName = await generateSessionName(prompt);
     const [session] = await db
       .insert(chat_sessions)
@@ -75,27 +74,22 @@ export async function POST(req) {
       })
       .returning();
 
-    // Save user message
     await db.insert(messages).values({
       session_id: session.id,
       role: "user",
       content: prompt,
     });
-
-    // Get chat history (just this session)
     const history = await db
       .select()
       .from(messages)
       .where(eq(messages.session_id, session.id))
       .orderBy(messages.created_at);
 
-    // Generate AI response
     const aiResponse = await generateGeminiResponse(prompt, history);
 
-    // Save AI message
     await db.insert(messages).values({
       session_id: session.id,
-      role: "assistant",
+      role: "model",
       content: aiResponse,
     });
 
@@ -120,7 +114,6 @@ export async function GET(req) {
     const sessionId = searchParams.get("id");
 
     if (sessionId) {
-      // Fetch messages for a specific session owned by the user
       const session = await db
         .select()
         .from(chat_sessions)
@@ -147,7 +140,6 @@ export async function GET(req) {
       return NextResponse.json({ messages: msgs });
     }
 
-    // Fetch all sessions belonging to the user
     const sessions = await db
       .select()
       .from(chat_sessions)

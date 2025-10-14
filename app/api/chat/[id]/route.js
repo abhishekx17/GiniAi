@@ -65,6 +65,7 @@ export async function POST(req) {
       .from(messages)
       .where(eq(messages.session_id, session.id))
       .orderBy(messages.created_at);
+    console.log("historyDB", historyDB);
 
     const history = historyDB.map((msg) => ({
       role: msg.role,
@@ -79,7 +80,7 @@ export async function POST(req) {
 
     await db.insert(messages).values({
       session_id: session.id,
-      role: "assistant",
+      role: "model",
       content: aiResponse,
     });
 

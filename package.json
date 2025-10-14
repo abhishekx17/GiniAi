@@ -1,0 +1,48 @@
+{
+  "name": "deepseek",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.33.2",
+    "@google/genai": "^1.24.0",
+    "@huggingface/inference": "^4.11.1",
+    "axios": "^1.12.2",
+    "cloudinary": "^2.7.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.6",
+    "formidable": "^3.5.4",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.545.0",
+    "mongoose": "^8.19.0",
+    "next": "15.5.4",
+    "openai": "^6.1.0",
+    "pdf-parse": "^2.2.16",
+    "pdf-parse-fixed": "^1.1.1",
+    "pdf2json": "^4.0.0",
+    "pg": "^8.16.3",
+    "prismjs": "^1.30.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-hot-toast": "^2.6.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2",
+    "rehype-sanitize": "^6.0.0",
+    "svix": "^1.76.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/formidable": "^3.4.6",
+    "drizzle-kit": "^0.31.5",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.4",
+    "tailwindcss": "^4",
+    "tsx": "^4.20.6"
+  }
+}

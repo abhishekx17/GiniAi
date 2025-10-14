@@ -12,7 +12,7 @@ const genAI = new GoogleGenAI({
 
 async function generateGeminiResponse(prompt, history) {
   const chatHistory = history.map((msg) => ({
-    role: msg.role === "user" ? "user" : "model",
+    role: msg.role === "user" ? "user" : "assistant",
     parts: [{ text: msg.content }],
   }));
 
@@ -21,7 +21,7 @@ async function generateGeminiResponse(prompt, history) {
     contents: [...chatHistory, { role: "user", parts: [{ text: prompt }] }],
   });
 
-  return chat.text;
+  return chat.text || "No response generated";
 }
 
 export async function POST(req) {
@@ -44,6 +44,9 @@ export async function POST(req) {
         .from(chat_sessions)
         .where(eq(chat_sessions.id, sessionId))
         .limit(1);
+
+      // Ensure session belongs to the user
+      if (session?.clerkId !== userId) session = null;
     }
 
     if (!session) {
@@ -52,7 +55,7 @@ export async function POST(req) {
         .values({
           id: randomUUID(),
           session_name: `Chat ${new Date().toLocaleString()}`,
-          user_id: userId,
+          clerkId: userId,
         })
         .returning();
     }
@@ -62,6 +65,7 @@ export async function POST(req) {
       .from(messages)
       .where(eq(messages.session_id, session.id))
       .orderBy(messages.created_at);
+
     const history = historyDB.map((msg) => ({
       role: msg.role,
       content: msg.content,
@@ -73,13 +77,11 @@ export async function POST(req) {
 
     const aiResponse = await generateGeminiResponse(prompt, history);
 
-    await db
-      .insert(messages)
-      .values({
-        session_id: session.id,
-        role: "assistant",
-        content: aiResponse,
-      });
+    await db.insert(messages).values({
+      session_id: session.id,
+      role: "assistant",
+      content: aiResponse,
+    });
 
     return NextResponse.json({ message: aiResponse, sessionId: session.id });
   } catch (error) {
@@ -93,7 +95,7 @@ export async function GET(req, context) {
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  const { params } = await context;
+  const { params } = context;
   const { id } = params;
   if (!id)
     return NextResponse.json(
@@ -104,9 +106,10 @@ export async function GET(req, context) {
   const session = await db
     .select()
     .from(chat_sessions)
-    .where(eq(chat_sessions.id, id), eq(chat_sessions.user_id, userId))
+    .where(eq(chat_sessions.id, id), eq(chat_sessions.clerkId, userId))
     .limit(1)
     .then((res) => res[0]);
+
   if (!session)
     return NextResponse.json({ error: "Session not found" }, { status: 404 });
 
@@ -115,6 +118,7 @@ export async function GET(req, context) {
     .from(messages)
     .where(eq(messages.session_id, id))
     .orderBy(messages.created_at);
+
   return NextResponse.json({ session, messages: msgs });
 }
 
@@ -124,7 +128,7 @@ export async function PATCH(req, context) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { params } = await context;
+    const { params } = context;
     const { id } = params;
     const { newName } = await req.json();
     if (!newName || newName.trim() === "")
@@ -136,8 +140,9 @@ export async function PATCH(req, context) {
     const updated = await db
       .update(chat_sessions)
       .set({ session_name: newName })
-      .where(eq(chat_sessions.id, id), eq(chat_sessions.user_id, userId))
+      .where(eq(chat_sessions.id, id), eq(chat_sessions.clerkId, userId))
       .returning();
+
     if (!updated.length)
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
 
@@ -157,14 +162,17 @@ export async function DELETE(req, context) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { params } = await context;
+    const { params } = context;
     const { id } = params;
 
+    // Ensure messages belong to this session
     await db.delete(messages).where(eq(messages.session_id, id));
+
     const deleted = await db
       .delete(chat_sessions)
-      .where(eq(chat_sessions.id, id), eq(chat_sessions.user_id, userId))
+      .where(eq(chat_sessions.id, id), eq(chat_sessions.clerkId, userId))
       .returning();
+
     if (!deleted.length)
       return NextResponse.json({ error: "Session not found" }, { status: 404 });
 

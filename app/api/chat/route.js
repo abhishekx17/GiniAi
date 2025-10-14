@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "../../../db";
 import { randomUUID } from "crypto";
 import { chat_sessions, messages } from "../../../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { getAuth } from "@clerk/nextjs/server";
 import { GoogleGenAI } from "@google/genai";
 
@@ -29,7 +29,6 @@ async function generateGeminiResponse(prompt, history) {
   return chat.text || "No response generated.";
 }
 
-// ---- Generate a session name ----
 async function generateSessionName(prompt) {
   try {
     const chat = await genAI.models.generateContent({
@@ -39,7 +38,7 @@ async function generateSessionName(prompt) {
           role: "user",
           parts: [
             {
-              text: `Suggest a short chat session name for this prompt: "${prompt}" only give response of the session name in 10 letters only give one name  `,
+              text: `Suggest a short chat session name for this prompt: "${prompt}". Only give one concise name under 10 letters.`,
             },
           ],
         },
@@ -65,8 +64,8 @@ export async function POST(req) {
     if (!prompt)
       return NextResponse.json({ error: "Empty message" }, { status: 400 });
 
+    // Create session for this user
     const sessionName = await generateSessionName(prompt);
-
     const [session] = await db
       .insert(chat_sessions)
       .values({
@@ -83,14 +82,17 @@ export async function POST(req) {
       content: prompt,
     });
 
+    // Get chat history (just this session)
     const history = await db
       .select()
       .from(messages)
       .where(eq(messages.session_id, session.id))
       .orderBy(messages.created_at);
 
+    // Generate AI response
     const aiResponse = await generateGeminiResponse(prompt, history);
 
+    // Save AI message
     await db.insert(messages).values({
       session_id: session.id,
       role: "assistant",
@@ -114,9 +116,42 @@ export async function GET(req) {
     if (!userId)
       return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
 
+    const { searchParams } = new URL(req.url);
+    const sessionId = searchParams.get("id");
+
+    if (sessionId) {
+      // Fetch messages for a specific session owned by the user
+      const session = await db
+        .select()
+        .from(chat_sessions)
+        .where(
+          and(
+            eq(chat_sessions.id, sessionId),
+            eq(chat_sessions.clerkId, userId)
+          )
+        );
+
+      if (session.length === 0) {
+        return NextResponse.json(
+          { error: "Session not found" },
+          { status: 404 }
+        );
+      }
+
+      const msgs = await db
+        .select()
+        .from(messages)
+        .where(eq(messages.session_id, sessionId))
+        .orderBy(messages.created_at);
+
+      return NextResponse.json({ messages: msgs });
+    }
+
+    // Fetch all sessions belonging to the user
     const sessions = await db
       .select()
       .from(chat_sessions)
+      .where(eq(chat_sessions.clerkId, userId))
       .orderBy(chat_sessions.updated_at);
 
     return NextResponse.json({ sessions });

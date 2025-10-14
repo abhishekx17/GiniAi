@@ -82,20 +82,16 @@ const Sidebar = ({ expand, setExpand }) => {
                 alt="sidebar toggle"
                 className="hidden md:block w-7"
               />
-              <div className="absolute left-full ml-2 whitespace-nowrap rounded bg-black text-white text-xs px-2 py-1 opacity-0 group-hover:opacity-100 transition">
-                {expand ? "Close sidebar" : "Open sidebar"}
-                <div className="w-3 h-3 absolute bg-black rotate-45 left-0 top-1/2 -translate-y-1/2 -ml-1.5"></div>
-              </div>
+
             </div>
           </div>
 
           {/* New Chat Button */}
           <button
-            className={`mt-8 flex items-center justify-center cursor-pointer ${
-              expand
+            className={`mt-8 flex items-center justify-center cursor-pointer ${expand
                 ? "bg-primary hover:opacity-90 rounded-2xl gap-2 p-2.5 w-max"
                 : "group relative h-9 w-9 mx-auto hover:bg-gray-500/30 rounded-lg"
-            }`}
+              }`}
             onClick={newChat}
           >
             <Image
@@ -133,11 +129,10 @@ const Sidebar = ({ expand, setExpand }) => {
       <div className="mt-4 flex flex-col gap-2">
         {/* Get App */}
         <div
-          className={`flex items-center cursor-pointer group relative ${
-            expand
+          className={`flex items-center cursor-pointer group relative ${expand
               ? "gap-2 text-white/80 text-sm p-2.5 border border-primary rounded-lg hover:bg-white/10"
               : "h-10 w-10 mx-auto hover:bg-gray-500/10 rounded-lg"
-          }`}
+            }`}
         >
           {expand ? (
             <span className="flex items-center gap-2">
@@ -156,9 +151,8 @@ const Sidebar = ({ expand, setExpand }) => {
               <Image className="w-44" src={assets.qrcode} alt="" />
               <p>Scan to get Deepseek App</p>
               <div
-                className={`w-3 h-3 absolute bg-black rotate-45 ${
-                  expand ? "right-1/2" : "left-4"
-                } -bottom-1.5`}
+                className={`w-3 h-3 absolute bg-black rotate-45 ${expand ? "right-1/2" : "left-4"
+                  } -bottom-1.5`}
               ></div>
             </div>
           </div>

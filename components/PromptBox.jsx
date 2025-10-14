@@ -47,7 +47,7 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
       className="w-full max-w-2xl bg-[#404045] p-4 rounded-3xl mt-4 transition-all"
     >
       <textarea
-        className="outline-none w-full resize-none overflow-hidden break-words bg-transparent text-white placeholder-gray-400"
+      className="outline-none w-full resize-none overflow-hidden break-words bg-transparent text-white placeholder-gray-400"
         rows={2}
         placeholder="Message Deepseek"
         value={prompt}

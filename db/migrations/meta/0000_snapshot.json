@@ -1,5 +1,5 @@
 {
-  "id": "0403c4b1-1b46-41ca-88bd-b53980ff7867",
+  "id": "b23a6e32-fe89-4a08-ab98-72ab00a85668",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -13,6 +13,12 @@
           "type": "text",
           "primaryKey": true,
           "notNull": true
+        },
+        "clerkId": {
+          "name": "clerkId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "session_name": {
           "name": "session_name",

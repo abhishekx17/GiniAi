@@ -6,6 +6,7 @@ import Sidebar from "../components/Sidebar";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 export default function Home() {
   const [expand, setExpand] = useState(false);
@@ -48,12 +49,12 @@ export default function Home() {
 
       const data = await response.json();
       console.log(data);
-
+if(data.error){
+  toast.error(data.error)
+}
       if (data.sessionId) {
         window.location.href = `/${data.sessionId}`;
       }
-
-
       if (data.message) {
         setMessages(prev => [...prev, { role: 'model', content: data.message }]);
         setSessionId(data.sessionId);

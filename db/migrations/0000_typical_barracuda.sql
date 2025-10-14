@@ -1,5 +1,6 @@
 CREATE TABLE "chat_sessions" (
 	"id" text PRIMARY KEY NOT NULL,
+	"clerkId" text,
 	"session_name" varchar(255) NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL

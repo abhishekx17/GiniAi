@@ -25,7 +25,7 @@ async function generateGeminiResponse(prompt, history) {
 }
 
 export async function POST(req) {
-  const { userId } = getAuth();
+  const { userId } = getAuth(req);
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -89,7 +89,7 @@ export async function POST(req) {
 }
 
 export async function GET(req, context) {
-  const { userId } = getAuth();
+  const { userId } = getAuth(req);
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -119,7 +119,7 @@ export async function GET(req, context) {
 }
 
 export async function PATCH(req, context) {
-  const { userId } = getAuth();
+  const { userId } = getAuth(req);
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -152,7 +152,7 @@ export async function PATCH(req, context) {
 }
 
 export async function DELETE(req, context) {
-  const { userId } = getAuth();
+  const { userId } = getAuth(req);
   if (!userId)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

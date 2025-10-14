@@ -76,7 +76,7 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
 
       <div className="flex items-center justify-between text-sm mt-3">
         {/* Deepthink / Search Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center text-xs gap-2">
           <button
             type="button"
             className={`flex items-center gap-2 border px-2 py-1 rounded-full cursor-pointer transition ${mode.thinking ? " text-white bg-blue-500/80 text-white" : "border-gray-300/40 hover:bg-gray-500/20 text-gray-200"
@@ -89,7 +89,7 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
 
           <button
             type="button"
-            className={`flex items-center gap-2 border px-2 py-1 rounded-full cursor-pointer transition ${mode.searching ? "text-white bg-blue-500/80 " : "border-gray-300/40 hover:bg-gray-500/20 text-gray-200"
+            className={`flex items-center text-xs gap-2 border px-2 py-1 rounded-full cursor-pointer transition ${mode.searching ? "text-white bg-blue-500/80 " : "border-gray-300/40 hover:bg-gray-500/20 text-gray-200"
               }`}
             onClick={() => toggleMode("searching")}
           >

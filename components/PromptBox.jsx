@@ -1,14 +1,15 @@
-'use client';
+"use client";
 import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { assets } from "../assets/assets";
 import { motion } from "framer-motion";
+import { assets } from "../assets/assets";
 
 const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
   const [prompt, setPrompt] = useState("");
   const [file, setFile] = useState(null);
   const [mode, setMode] = useState({ thinking: false, searching: false });
   const [isArrowAnimating, setIsArrowAnimating] = useState(false);
+
   const fileInputRef = useRef(null);
 
   const handleSend = async () => {
@@ -33,93 +34,138 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
     setMode((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleArrowClick = () => handleSend();
-
-  const handleFileChange = (e) => {
-    if (e.target.files.length > 0) {
-      setFile(e.target.files[0]); // store file, do NOT send yet
-    }
-  };
-
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-      className="w-full max-w-2xl bg-[#404045] p-4 rounded-3xl mt-4 transition-all"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSend();
+      }}
+      className="
+        w-full max-w-2xl mx-auto
+         bg-gradient-to-b from-blue-50 via-white to-blue-100 backdrop-blur-xl
+        p-4 rounded-3xl border border-blue-200/40
+        shadow-[0_4px_20px_rgba(0,0,50,0.05)]
+        transition-all
+      "
     >
+      {/* Textarea */}
       <textarea
-      className="outline-none w-full resize-none overflow-hidden break-words bg-transparent text-white placeholder-gray-400"
+        className="
+          outline-none w-full resize-none overflow-hidden
+          bg-transparent text-gray-800 placeholder-gray-500
+          text-base font-medium
+        "
         rows={2}
-        placeholder="Message Deepseek"
+        placeholder="Ask Gini anything…"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
+          if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            if (prompt.trim()) handleArrowClick();
+            if (prompt.trim()) handleSend();
           }
         }}
       />
 
-      {/* Hidden file input */}
+      {/* Hidden File Picker */}
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*,application/pdf"
-        onChange={handleFileChange}
+        onChange={(e) => setFile(e.target.files?.[0])}
         className="hidden"
       />
 
-      {/* Show selected file name */}
+      {/* File Preview */}
       {file && (
-        <p className="text-gray-300 text-sm mt-1 truncate">{file.name}</p>
+        <p className="text-gray-600 text-sm mt-1 truncate font-medium">
+          {file.name}
+        </p>
       )}
 
-      <div className="flex items-center justify-between text-sm mt-3">
-        {/* Deepthink / Search Buttons */}
-        <div className="flex items-center text-xs gap-2">
+      {/* Footer */}
+      <div className="flex items-center justify-between mt-3">
+        {/* Modes */}
+        <div className="flex items-center gap-2 text-xs">
+          {/* THINK */}
           <button
             type="button"
-            className={`flex items-center gap-2 border px-2 py-1 rounded-full cursor-pointer transition ${mode.thinking ? " text-white bg-blue-500/80 text-white" : "border-gray-300/40 hover:bg-gray-500/20 text-gray-200"
-              }`}
             onClick={() => toggleMode("thinking")}
+            className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-full
+              border transition font-medium
+              ${
+                mode.thinking
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : "border-blue-300 hover:bg-blue-100 text-blue-700"
+              }
+            `}
           >
-            <Image className="h-5 w-5" src={assets.deepthink_icon} alt="Deepthink" />
-            Deepthink (R1)
+            <Image
+              src={assets.deepthink_icon}
+              alt="Think"
+              width={18}
+              height={18}
+            />
+            Think
           </button>
 
+          {/* SEARCH */}
           <button
             type="button"
-            className={`flex items-center text-xs gap-2 border px-2 py-1 rounded-full cursor-pointer transition ${mode.searching ? "text-white bg-blue-500/80 " : "border-gray-300/40 hover:bg-gray-500/20 text-gray-200"
-              }`}
             onClick={() => toggleMode("searching")}
+            className={`
+              flex items-center gap-2 px-3 py-1.5 rounded-full
+              border transition font-medium
+              ${
+                mode.searching
+                  ? "bg-blue-600 text-white border-blue-600 shadow"
+                  : "border-blue-300 hover:bg-blue-100 text-blue-700"
+              }
+            `}
           >
-            <Image className="h-5 w-5" src={assets.search_icon} alt="Search" />
+            <Image
+              src={assets.search_icon}
+              alt="Search"
+              width={18}
+              height={18}
+            />
             Search
           </button>
         </div>
 
-        {/* Pin Icon triggers file picker */}
-        <div className="flex items-center gap-2">
+        {/* File + Send */}
+        <div className="flex items-center gap-4">
+          {/* File Upload */}
           <div
-            className="cursor-pointer"
-            onClick={() => fileInputRef.current.click()}
+            className="cursor-pointer hover:opacity-70"
+            onClick={() => fileInputRef.current?.click()}
           >
-            <Image className="w-4" src={assets.pin_icon} alt="Pin" />
+            <Image src={assets.pin_icon} alt="Attach" width={20} height={20} />
           </div>
 
-          {/* Arrow Icon sends everything */}
+          {/* Send */}
           <motion.div
             whileTap={{ scale: 0.9 }}
-            animate={isArrowAnimating ? { rotate: [0, 20, -20, 0] } : { rotate: 0 }}
-            transition={{ duration: 0.5 }}
-            className={`${prompt || file ? "bg-primary" : "bg-[#71717a]"} rounded-full p-2 cursor-pointer`}
-            onClick={handleArrowClick}
-
+            animate={
+              isArrowAnimating ? { rotate: [0, 20, -20, 0] } : { rotate: 0 }
+            }
+            transition={{ duration: 0.4 }}
+            onClick={handleSend}
+            className={`
+              p-2 rounded-full cursor-pointer
+              ${
+                prompt || file
+                  ? "bg-blue-600 shadow-md shadow-blue-300"
+                  : "bg-blue-200/60"
+              }
+            `}
           >
             <Image
-              className="w-3.5 aspect-square"
               src={prompt || file ? assets.arrow_icon : assets.arrow_icon_dull}
               alt="Send"
+              width={16}
+              height={16}
             />
           </motion.div>
         </div>

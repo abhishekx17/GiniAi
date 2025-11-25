@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
-@theme {
-  --color-primary: #4d6bfe;
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-gradient-to-b from-blue-50 via-white to-blue-100 text-gray-900;
+  }
 }
 
-html{
-  @apply scroll-smooth;
-}
-
-::-webkit-scrollbar {
-  display: none;
+@layer utilities {
+  ::-webkit-scrollbar {
+    display: none;
+  }
 }

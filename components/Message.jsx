@@ -38,7 +38,6 @@ const Message = ({
             }
           `}
         >
-          {/* Hover Action Buttons */}
           <div
             className={`
               opacity-0 group-hover:opacity-100 absolute flex gap-3 
@@ -91,14 +90,12 @@ const Message = ({
             )}
           </div>
 
-          {/* Message Content */}
           {isUser ? (
             <span className="leading-relaxed font-medium text-gray-900">
               {content}
             </span>
           ) : (
             <div className="flex gap-3 w-full items-start">
-              {/* Gini Logo Bubble */}
               <div className="h-10 w-10 rounded-xl bg-white border border-[#D5E3FF] shadow-sm flex items-center justify-center">
                 <Image
                   src={assets.logo_icon}
@@ -107,7 +104,6 @@ const Message = ({
                 />
               </div>
 
-              {/* Markdown */}
               <div className="space-y-2 w-full overflow-auto prose prose-blue max-w-none text-gray-900">
                 <ReactMarkdown rehypePlugins={[rehypeSanitize]}>
                   {content}

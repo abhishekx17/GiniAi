@@ -48,7 +48,6 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
         transition-all
       "
     >
-      {/* Textarea */}
       <textarea
         className="
           outline-none w-full resize-none overflow-hidden
@@ -67,7 +66,6 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
         }}
       />
 
-      {/* Hidden File Picker */}
       <input
         ref={fileInputRef}
         type="file"
@@ -76,18 +74,14 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
         className="hidden"
       />
 
-      {/* File Preview */}
       {file && (
         <p className="text-gray-600 text-sm mt-1 truncate font-medium">
           {file.name}
         </p>
       )}
 
-      {/* Footer */}
       <div className="flex items-center justify-between mt-3">
-        {/* Modes */}
         <div className="flex items-center gap-2 text-xs">
-          {/* THINK */}
           <button
             type="button"
             onClick={() => toggleMode("thinking")}
@@ -110,7 +104,6 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
             Think
           </button>
 
-          {/* SEARCH */}
           <button
             type="button"
             onClick={() => toggleMode("searching")}
@@ -134,9 +127,7 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
           </button>
         </div>
 
-        {/* File + Send */}
         <div className="flex items-center gap-4">
-          {/* File Upload */}
           <div
             className="cursor-pointer hover:opacity-70"
             onClick={() => fileInputRef.current?.click()}
@@ -144,7 +135,6 @@ const PromptBox = ({ onSend, isLoading, setIsLoading }) => {
             <Image src={assets.pin_icon} alt="Attach" width={20} height={20} />
           </div>
 
-          {/* Send */}
           <motion.div
             whileTap={{ scale: 0.9 }}
             animate={

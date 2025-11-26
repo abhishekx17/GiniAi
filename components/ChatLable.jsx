@@ -74,14 +74,12 @@ const ChatLable = ({ session, openMenu, setOpenMenu, onUpdateSessions }) => {
         hover:border-blue-200/60
       "
     >
-      {/* Chat Link */}
       <Link href={`/${session.id}`} className="flex-1 flex items-center gap-3">
         <div className="truncate font-medium text-gray-700">
           <MarkdownRenderer content={session.session_name} />
         </div>
       </Link>
 
-      {/* Menu Button */}
       <div className="relative flex-shrink-0" ref={menuRef}>
         <button
           onClick={toggleMenu}
@@ -99,7 +97,6 @@ const ChatLable = ({ session, openMenu, setOpenMenu, onUpdateSessions }) => {
           />
         </button>
 
-        {/* Dropdown */}
         {isOpen &&
           createPortal(
             <div
@@ -154,7 +151,6 @@ const ChatLable = ({ session, openMenu, setOpenMenu, onUpdateSessions }) => {
           )}
       </div>
 
-      {/* Rename Modal */}
       {showRenameModal &&
         createPortal(
           <div

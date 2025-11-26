@@ -4,7 +4,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github.css"; // Light theme
+import "highlight.js/styles/github.css"; 
 
 const MarkdownRenderer = ({ content }) => {
   return (

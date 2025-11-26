@@ -51,8 +51,10 @@ const Sidebar = ({ expand, setExpand }) => {
     );
   }
 
-  const newChat = () => router.push("/");
-
+  const newChat = () => {
+    const newId = crypto.randomUUID();
+    router.push(`/${newId}`);
+  };
   return (
     <div
       className={`flex flex-col justify-between 
@@ -66,14 +68,12 @@ const Sidebar = ({ expand, setExpand }) => {
       style={{ height: "100vh" }}
     >
       <div className="flex-1 overflow-y-auto">
-        {/* Top Section */}
         <div>
           <div
             className={`flex ${
               expand ? "flex-row gap-10" : "flex-col items-center gap-8"
             }`}
           >
-            {/* Gini Logo / Text */}
             {expand ? (
               <h2 className="text-3xl font-extrabold bg-gradient-to-r from-blue-500 to-blue-700 text-transparent bg-clip-text select-none">
                 Gini AI
@@ -86,7 +86,6 @@ const Sidebar = ({ expand, setExpand }) => {
               />
             )}
 
-            {/* Toggle Button */}
             <div
               onClick={() => setExpand(!expand)}
               className="flex items-center justify-center 
@@ -100,7 +99,6 @@ const Sidebar = ({ expand, setExpand }) => {
             </div>
           </div>
 
-          {/* New Chat Button */}
           <button
             onClick={newChat}
             className={`
@@ -121,7 +119,6 @@ const Sidebar = ({ expand, setExpand }) => {
             {expand && <p className="text-sm font-medium">New Chat</p>}
           </button>
 
-          {/* Recents */}
           {expand && (
             <div className="mt-8 text-gray-600 text-sm">
               <p className="my-1 font-semibold text-gray-700">Recents</p>
@@ -146,7 +143,6 @@ const Sidebar = ({ expand, setExpand }) => {
         </div>
       </div>
 
-      {/* Bottom Section */}
       <div className="mt-4 flex flex-col gap-2 pb-4">
         <div
           onClick={user ? null : openSignIn}

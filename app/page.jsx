@@ -17,12 +17,10 @@ export default function Home() {
   const [sessions, setSessions] = useState([]);
   const messagesEndRef = useRef(null);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Fetch sessions
   useEffect(() => {
     const fetchSessions = async () => {
       try {
@@ -65,7 +63,6 @@ export default function Home() {
 
       if (data.sessionId && !sessionId) {
         setSessionId(data.sessionId);
-        // Optional: Update URL without full page reload
         window.history.pushState({}, "", `/${data.sessionId}`);
       }
 
@@ -99,7 +96,6 @@ export default function Home() {
 
   return (
     <div className="flex h-screen bg-gradient-to-b from-blue-50 via-white to-blue-100 text-gray-900">
-      {/* Sidebar */}
       <Sidebar
         expand={expand}
         setExpand={setExpand}
@@ -108,9 +104,7 @@ export default function Home() {
         currentSessionId={sessionId}
       />
 
-      {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Mobile Header */}
         <div className="md:hidden flex items-center justify-between p-4 border-b border-blue-100 bg-white/80 backdrop-blur-sm z-10">
           <Image
             onClick={() => setExpand(!expand)}
@@ -121,12 +115,10 @@ export default function Home() {
             height={24}
           />
           <h2 className="text-lg font-semibold text-blue-600">Gini AI</h2>
-          <div className="w-6"></div> {/* Spacer for balance */}
+          <div className="w-6"></div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Loading Screen */}
           {isPageLoading ? (
             <div className="flex flex-col items-center justify-center h-full">
               <Image
@@ -144,7 +136,6 @@ export default function Home() {
               </p>
             </div>
           ) : messages.length === 0 ? (
-            /* Welcome Screen */
             <div className="flex flex-col items-center justify-center h-full px-4">
               <Image
                 src={assets.logo_icon}
@@ -164,7 +155,6 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            /* Messages Container */
             <div className="flex-1 overflow-y-auto px-4 py-4">
               <div className="max-w-4xl mx-auto w-full">
                 <div className="space-y-6">
